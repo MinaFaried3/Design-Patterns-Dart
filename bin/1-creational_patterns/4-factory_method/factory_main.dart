@@ -8,6 +8,7 @@ void main() {
   String code = (stdin.readLineSync()!).substring(0, 6);
   BankInterface bank1 = bankFactory.getBank(code);
   print(bank1.withdraw());
-  BankInterface bank2 = bankFactory.getBank(code);
+  String code2 = (stdin.readLineSync()!).substring(0, 6);
+  BankInterface bank2 = bankFactory.getBank(code2);
   print(bank2.withdraw());
 }
