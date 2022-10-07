@@ -22,4 +22,9 @@ class PurchaseInvoice {
 
     return invoice;
   }
+
+  @override
+  String toString() {
+    return 'PurchaseInvoice{discount: $discount, totalAmount: $totalAmount, netTotal: $netTotal}';
+  }
 }
