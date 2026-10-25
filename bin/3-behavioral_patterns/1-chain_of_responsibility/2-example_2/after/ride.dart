@@ -44,7 +44,6 @@ abstract class TripCancellationHandler {
 class ValidTripStatusHandler extends TripCancellationHandler {
   @override
   void cancelTrip({required Trip trip, required String currentUserId}) {
-    print("cancelTrip from ValidTripStatusHandler");
     if (trip.status.notValidToCancel) {
       print('Trip cannot be cancelled');
       return;
@@ -56,7 +55,6 @@ class ValidTripStatusHandler extends TripCancellationHandler {
 class ValidRiderOwnershipHandler extends TripCancellationHandler {
   @override
   void cancelTrip({required Trip trip, required String currentUserId}) {
-    print("cancelTrip from ValidRiderOwnershipHandler");
     if (trip.riderId != currentUserId) {
       print('Unauthorized cancellation');
       return;
@@ -69,7 +67,6 @@ class ValidRiderOwnershipHandler extends TripCancellationHandler {
 class CalculateCancellationFeeHandler extends TripCancellationHandler {
   @override
   void cancelTrip({required Trip trip, required String currentUserId}) {
-    print("cancelTrip from CalculateCancellationFeeHandler");
     if (trip.status.isDriverArrived) {
       trip.cancellationFee = 25.0;
       print('Cancellation fee applied: 25 EGP');
@@ -82,7 +79,6 @@ class CalculateCancellationFeeHandler extends TripCancellationHandler {
 class ExecuteCancellationHandler extends TripCancellationHandler {
   @override
   void cancelTrip({required Trip trip, required String currentUserId}) {
-    print("cancelTrip from ExecuteCancellationHandler");
     trip.status = .cancelled;
     print('Trip ${trip.id} cancelled successfully');
   }
@@ -92,10 +88,22 @@ class TripCancellationService {
   late final TripCancellationHandler chain;
 
   TripCancellationService() {
-    chain = ValidTripStatusHandler()
-        .setNext(ValidRiderOwnershipHandler())
-        .setNext(CalculateCancellationFeeHandler())
-        .setNext(ExecuteCancellationHandler());
+    final ValidTripStatusHandler validTripStatusHandler =
+        ValidTripStatusHandler();
+    final ValidRiderOwnershipHandler validRiderOwnershipHandler =
+        ValidRiderOwnershipHandler();
+    final CalculateCancellationFeeHandler calculateCancellationFeeHandler =
+        CalculateCancellationFeeHandler();
+    final ExecuteCancellationHandler executeCancellationHandler =
+        ExecuteCancellationHandler();
+
+    validTripStatusHandler
+        .setNext(validRiderOwnershipHandler)
+        .setNext(validRiderOwnershipHandler)
+        .setNext(calculateCancellationFeeHandler)
+        .setNext(executeCancellationHandler);
+
+    chain = validTripStatusHandler;
   }
 
   void cancelTrip({required Trip trip, required String currentUserId}) {
