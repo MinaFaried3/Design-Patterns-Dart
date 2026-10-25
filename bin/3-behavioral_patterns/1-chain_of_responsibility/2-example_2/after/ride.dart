@@ -99,7 +99,6 @@ class TripCancellationService {
 
     validTripStatusHandler
         .setNext(validRiderOwnershipHandler)
-        .setNext(validRiderOwnershipHandler)
         .setNext(calculateCancellationFeeHandler)
         .setNext(executeCancellationHandler);
 
