@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-class string extends LinkedListEntry<string> {
+final class string extends LinkedListEntry<string> {
   final String str;
 
   string(this.str);
