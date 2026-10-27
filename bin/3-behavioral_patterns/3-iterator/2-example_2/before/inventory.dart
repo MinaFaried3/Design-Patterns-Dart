@@ -1,3 +1,6 @@
+// BEFORE: Each report repeats the location traversal and inactive-subtree rule.
+// The design duplication is intentional so it can be compared with after/.
+
 class StockBatch {
   final String id;
   final String sku;
@@ -90,6 +93,13 @@ class InventoryReportService {
     required DateTime today,
     required int withinDays,
   }) {
+    if (withinDays < 0) {
+      throw ArgumentError.value(
+        withinDays,
+        'withinDays',
+        'Must not be negative',
+      );
+    }
     final result = <ExpiringBatchReport>[];
 
     final cutoff = today.add(Duration(days: withinDays));
@@ -180,9 +190,9 @@ class InventoryReportService {
 
       for (final batch in location.batches) {
         rows.add(
-          '$currentPath,'
-          '${batch.sku},'
-          '${batch.id},'
+          '${_csvField(currentPath)},'
+          '${_csvField(batch.sku)},'
+          '${_csvField(batch.id)},'
           '${batch.onHand},'
           '${batch.reserved},'
           '${batch.available}',
@@ -200,6 +210,20 @@ class InventoryReportService {
 
     return rows;
   }
+}
+
+// ======================================
+// CSV FIELD ENCODING
+// ======================================
+
+String _csvField(String value) {
+  if (value.contains(',') ||
+      value.contains('"') ||
+      value.contains('\n') ||
+      value.contains('\r')) {
+    return '"${value.replaceAll('"', '""')}"';
+  }
+  return value;
 }
 
 // ======================================
