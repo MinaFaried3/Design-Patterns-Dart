@@ -8,9 +8,7 @@ class Settings {
   static Future<Settings>? _pending;
 
   // The first caller chooses the loader. Later callers share its result.
-  static Future<Settings> load(
-    Future<Map<String, String>> Function() loader,
-  ) {
+  static Future<Settings> load(Future<Map<String, String>> Function() loader) {
     return _pending ??= _initialize(loader);
   }
 

@@ -47,10 +47,13 @@ class TemplateRegistry {
 // 4. USAGE
 void main() {
   final registry = TemplateRegistry();
-  registry.register('report', Section([
-    Paragraph('Introduction'),
-    Section([Paragraph('Body')]),
-  ]));
+  registry.register(
+    'report',
+    Section([
+      Paragraph('Introduction'),
+      Section([Paragraph('Body')]),
+    ]),
+  );
 
   final first = registry.create('report') as Section;
   final second = registry.create('report') as Section;

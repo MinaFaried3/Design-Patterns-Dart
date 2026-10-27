@@ -32,7 +32,10 @@ class LazyImage implements ImageDisplay {
 
 // 4. USAGE
 void main() {
-  final gallery = <ImageDisplay>[LazyImage('cover.png'), LazyImage('unused.png')];
+  final gallery = <ImageDisplay>[
+    LazyImage('cover.png'),
+    LazyImage('unused.png'),
+  ];
   assert(RealImage.loads == 0);
   print(gallery.first.display());
   print(gallery.first.display());

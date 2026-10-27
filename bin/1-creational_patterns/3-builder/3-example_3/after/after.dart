@@ -75,8 +75,10 @@ void main() {
 
   assert(markdown.endsWith('Total: 15'));
   assert(csv.endsWith('Total,15'));
-  assert(director.construct(markdownBuilder, {'Eraser': 2}) ==
-      '# Inventory\n- Eraser: 2\nTotal: 2');
+  assert(
+    director.construct(markdownBuilder, {'Eraser': 2}) ==
+        '# Inventory\n- Eraser: 2\nTotal: 2',
+  );
   print(markdown);
   print(csv);
 }

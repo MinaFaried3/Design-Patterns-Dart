@@ -6,7 +6,7 @@ class Sandwich {
   final List<String> fillings;
 
   Sandwich._(this.bread, List<String> fillings)
-      : fillings = List.unmodifiable(fillings);
+    : fillings = List.unmodifiable(fillings);
 }
 
 // 2. BUILDER

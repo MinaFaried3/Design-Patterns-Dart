@@ -28,15 +28,21 @@ class CachedCatalog implements Catalog {
   CachedCatalog(this._subject);
 
   @override
-  Future<String> fetch(String sku) => _cache[sku] ??= _load(sku);
+  Future<String> fetch(String sku) {
+    final existing = _cache[sku];
+    if (existing != null) return existing;
 
-  Future<String> _load(String sku) async {
-    try {
-      return await Future<String>.sync(() => _subject.fetch(sku));
-    } catch (_) {
-      _cache.remove(sku); // Failures must not poison all future requests.
-      rethrow;
-    }
+    late final Future<String> request;
+    request = Future<String>.sync(() => _subject.fetch(sku)).then(
+      (value) => value,
+      onError: (Object error, StackTrace stack) {
+        // An invalidated older request must not evict its replacement.
+        if (identical(_cache[sku], request)) _cache.remove(sku);
+        Error.throwWithStackTrace(error, stack);
+      },
+    );
+    _cache[sku] = request;
+    return request;
   }
 
   void invalidate(String sku) => _cache.remove(sku);
@@ -46,7 +52,10 @@ class CachedCatalog implements Catalog {
 Future<void> main() async {
   final service = CatalogService();
   final Catalog catalog = CachedCatalog(service);
-  final results = await Future.wait([catalog.fetch('PEN'), catalog.fetch('PEN')]);
+  final results = await Future.wait([
+    catalog.fetch('PEN'),
+    catalog.fetch('PEN'),
+  ]);
   await catalog.fetch('PEN');
   assert(service.calls == 1);
   print(results);

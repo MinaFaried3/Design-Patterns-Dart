@@ -24,7 +24,10 @@ DocumentNode copyNode(DocumentNode node) {
 
 // 3. USAGE
 void main() {
-  final template = Section([Paragraph('Introduction'), Section([Paragraph('Body')])]);
+  final template = Section([
+    Paragraph('Introduction'),
+    Section([Paragraph('Body')]),
+  ]);
   final copy = copyNode(template) as Section;
   (copy.children.first as Paragraph).text = 'Custom introduction';
   print((template.children.first as Paragraph).text);

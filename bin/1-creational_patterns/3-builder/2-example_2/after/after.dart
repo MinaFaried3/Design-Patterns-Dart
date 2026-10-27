@@ -5,7 +5,7 @@ class SelectQuery {
   final String sql;
   final List<Object> parameters;
   SelectQuery(this.sql, List<Object> values)
-      : parameters = List.unmodifiable(values);
+    : parameters = List.unmodifiable(values);
 }
 
 // 2. BUILDER: Supports a deliberately small SELECT grammar.
@@ -56,8 +56,10 @@ void main() {
   builder.whereEquals('status', 'active');
 
   assert(query.parameters.length == 2);
-  assert(query.sql ==
-      'SELECT * FROM inventory WHERE warehouse = ? AND quantity = ? LIMIT 5');
+  assert(
+    query.sql ==
+        'SELECT * FROM inventory WHERE warehouse = ? AND quantity = ? LIMIT 5',
+  );
   print(query.sql);
   print(query.parameters);
 }

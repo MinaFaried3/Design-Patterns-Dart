@@ -80,9 +80,9 @@ class ReportApplication {
   final AuditLog _audit;
 
   ReportApplication(DeploymentFactory factory)
-      : _store = factory.createStore(),
-        _queue = factory.createQueue(),
-        _audit = factory.createAuditLog();
+    : _store = factory.createStore(),
+      _queue = factory.createQueue(),
+      _audit = factory.createAuditLog();
 
   List<String> submit(String payload) {
     final key = _store.put(payload);
